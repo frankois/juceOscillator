@@ -99,7 +99,7 @@ void JuceOscillatorAudioProcessor::prepareToPlay (double sampleRate, int samples
     spec.numChannels = getTotalNumOutputChannels();
     
     osc.prepare(spec);
-    osc.setFrequency(220.0f);
+    osc.setFrequency(mFreq);
     
     gain.prepare(spec);
     gain.setGainLinear(0.01f);
@@ -148,8 +148,19 @@ void JuceOscillatorAudioProcessor::processBlock (juce::AudioBuffer<float>& buffe
     
     juce::dsp::AudioBlock<float> audioBlock {buffer};
     osc.process(juce::dsp::ProcessContextReplacing<float> (audioBlock));
-    
     gain.process(juce::dsp::ProcessContextReplacing<float> (audioBlock));
+    osc.setFrequency(mFreq);
+    
+    for (int channel = 0; channel < totalNumInputChannels; ++channel)
+    {
+        auto* channelData = buffer.getWritePointer (channel);
+
+        for (int sample=0; sample < buffer.getNumSamples(); ++sample)
+        {
+            channelData[sample] = channelData[sample] * juce::Decibels::decibelsToGain(mGain);
+        }
+    }
+    
 }
 
 //==============================================================================

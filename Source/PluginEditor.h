@@ -14,7 +14,8 @@
 //==============================================================================
 /**
 */
-class JuceOscillatorAudioProcessorEditor  : public juce::AudioProcessorEditor
+class JuceOscillatorAudioProcessorEditor  : public juce::AudioProcessorEditor,
+                                            public juce::Slider::Listener
 {
 public:
     JuceOscillatorAudioProcessorEditor (JuceOscillatorAudioProcessor&);
@@ -23,10 +24,14 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
+    void sliderValueChanged(juce::Slider* slider) override;
 
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
+    juce::Slider mFreqSlider;
+    juce::Label mFreqLabel;
+    juce::Slider mGainSlider;
+    juce::Label mGainLabel;
+    
     JuceOscillatorAudioProcessor& audioProcessor;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuceOscillatorAudioProcessorEditor)

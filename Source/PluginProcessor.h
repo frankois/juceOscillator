@@ -52,6 +52,9 @@ public:
     //==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+    
+    float mFreq{220};
+    float mGain{0.5};
 
 private:
 //    juce::dsp::Oscillator<float> osc { [](float x) {return std::sin (x);}};
@@ -59,11 +62,15 @@ private:
     juce::dsp::Oscillator<float> osc { [](float x) {return x<0.0f ? -1.0f : 1.0f;}, 200};
     
     // Different kind of waveforms:
-    // return std::sin (x);
-    // return x/juce::MathConstants<float>::pi;
-    // return x<0.0f ? -1.0f : 1.0f;
+    // return std::sin (x); // Sine
+    // return x/juce::MathConstants<float>::pi; // Saw
+    // return x<0.0f ? -1.0f : 1.0f; // Square
     
     juce::dsp::Gain<float> gain;
+    
+    juce::Slider frequencySlider;
+    juce::Label frequencyLabel;
+    
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuceOscillatorAudioProcessor)
 };
